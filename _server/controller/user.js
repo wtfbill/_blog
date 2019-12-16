@@ -201,6 +201,35 @@ class userController {
       };
     }
   }
+  static async userAdd(ctx) {
+    let params = ctx.request.body;
+    let { username, password, name } = params;
+    let user = await userModel.findOne({ where: { username } }); // 校验是否用户名是否已经注册
+    if (user) {
+      ctx.body = {
+        status: 0,
+        message: "此用户名已存在"
+      };
+    } else {
+      let bcryptPassword = await passwordHash(password); // 密码加密
+      let response = await userModel.create({
+        username,
+        name,
+        password: bcryptPassword
+      });
+      if (response) {
+        ctx.body = {
+          status: 1,
+          message: "新增成功"
+        };
+      } else {
+        ctx.body = {
+          status: 0,
+          message: "新增失败"
+        };
+      }
+    }
+  }
 }
 
 module.exports = userController;

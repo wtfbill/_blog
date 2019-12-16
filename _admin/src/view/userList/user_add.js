@@ -1,78 +1,52 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from "react";
-import {
-  Form,
-  Input,
-  Tooltip,
-  Icon,
-  Row,
-  Col,
-  Checkbox,
-  Button,
-  AutoComplete
-} from "antd";
+import { message, Form, Input, Button, Select } from "antd";
+import { connect } from "react-redux";
+import { userAdd } from "../../store/user/action";
+import "./_user.scss";
 
-const AutoCompleteOption = AutoComplete.Option;
+const { Option } = Select;
+
 class user_add extends Component {
   state = {
     confirmDirty: false,
-    autoCompleteResult: []
+    autoCompleteResult: [],
+    loading: false
   };
+
+  /**
+   * 提交表单
+   * @param {null}
+   * @returns {void}
+   */
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
+    const { validateFields } = this.props.form;
+    const { _userAdd } = this.props;
+    validateFields((err, values) => {
       if (!err) {
-        console.log("Received values of form: ", values);
+        _userAdd(values).then(data => {
+          if (data) {
+            if (data.status) {
+              message.success(data.message);
+            }
+          }
+        });
       }
     });
   };
 
-  handleConfirmBlur = e => {
-    const { value } = e.target;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  };
-
-  compareToFirstPassword = (rule, value, callback) => {
-    const { form } = this.props;
-    if (value && value !== form.getFieldValue("password")) {
-      callback("Two passwords that you enter is inconsistent!");
-    } else {
-      callback();
-    }
-  };
-
-  validateToNextPassword = (rule, value, callback) => {
-    const { form } = this.props;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(["confirm"], { force: true });
-    }
-    callback();
-  };
-
-  handleWebsiteChange = value => {
-    let autoCompleteResult;
-    if (!value) {
-      autoCompleteResult = [];
-    } else {
-      autoCompleteResult = [".com", ".org", ".net"].map(
-        domain => `${value}${domain}`
-      );
-    }
-    this.setState({ autoCompleteResult });
-  };
-
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { autoCompleteResult } = this.state;
 
     const formItemLayout = {
       labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 }
+        xs: { span: 8 },
+        sm: { span: 4 }
       },
       wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 }
+        xs: { span: 16 },
+        sm: { span: 8 }
       }
     };
     const tailFormItemLayout = {
@@ -82,125 +56,64 @@ class user_add extends Component {
           offset: 0
         },
         sm: {
-          span: 16,
-          offset: 8
+          span: 24,
+          offset: 7
         }
       }
     };
 
-    const websiteOptions = autoCompleteResult.map(website => (
-      <AutoCompleteOption key={website}>{website}</AutoCompleteOption>
-    ));
-
     return (
-      <div>
+      <div className="user_add_box">
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-          <Form.Item label="E-mail">
-            {getFieldDecorator("email", {
+          <Form.Item label="用户名" hasFeedback>
+            {getFieldDecorator("name", {
               rules: [
                 {
-                  type: "email",
-                  message: "The input is not valid E-mail!"
-                },
-                {
                   required: true,
-                  message: "Please input your E-mail!"
+                  message: "请输入用户名"
                 }
               ]
-            })(<Input />)}
+            })(<Input placeholder="请输入用户名" />)}
           </Form.Item>
-          <Form.Item label="Password" hasFeedback>
+          <Form.Item label="用户账号" hasFeedback>
+            {getFieldDecorator("username", {
+              rules: [
+                {
+                  required: true,
+                  message: "请输入用户账号",
+                  min: 5
+                }
+              ]
+            })(<Input placeholder="请输入用户账号" />)}
+          </Form.Item>
+          <Form.Item label="用户密码" hasFeedback>
             {getFieldDecorator("password", {
               rules: [
                 {
                   required: true,
-                  message: "Please input your password!"
-                },
-                {
-                  validator: this.validateToNextPassword
+                  message: "请输入用户密码",
+                  min: 6
                 }
               ]
-            })(<Input.Password />)}
+            })(<Input.Password placeholder="请输入用户密码" />)}
           </Form.Item>
-          <Form.Item label="Confirm Password" hasFeedback>
-            {getFieldDecorator("confirm", {
-              rules: [
-                {
-                  required: true,
-                  message: "Please confirm your password!"
-                },
-                {
-                  validator: this.compareToFirstPassword
-                }
-              ]
-            })(<Input.Password onBlur={this.handleConfirmBlur} />)}
-          </Form.Item>
-          <Form.Item
-            label={
-              <span>
-                Nickname&nbsp;
-                <Tooltip title="What do you want others to call you?">
-                  <Icon type="question-circle-o" />
-                </Tooltip>
-              </span>
-            }
-          >
-            {getFieldDecorator("nickname", {
-              rules: [
-                {
-                  required: true,
-                  message: "Please input your nickname!",
-                  whitespace: true
-                }
-              ]
-            })(<Input />)}
-          </Form.Item>
-
-          <Form.Item label="Website">
-            {getFieldDecorator("website", {
-              rules: [{ required: true, message: "Please input website!" }]
+          <Form.Item label="用户等级" hasFeedback>
+            {getFieldDecorator("auth", {
+              rules: [{ required: true, message: "请选择用户级别" }]
             })(
-              <AutoComplete
-                dataSource={websiteOptions}
-                onChange={this.handleWebsiteChange}
-                placeholder="website"
-              >
-                <Input />
-              </AutoComplete>
-            )}
-          </Form.Item>
-          <Form.Item
-            label="Captcha"
-            extra="We must make sure that your are a human."
-          >
-            <Row gutter={8}>
-              <Col span={12}>
-                {getFieldDecorator("captcha", {
-                  rules: [
-                    {
-                      required: true,
-                      message: "Please input the captcha you got!"
-                    }
-                  ]
-                })(<Input />)}
-              </Col>
-              <Col span={12}>
-                <Button>Get captcha</Button>
-              </Col>
-            </Row>
-          </Form.Item>
-          <Form.Item {...tailFormItemLayout}>
-            {getFieldDecorator("agreement", {
-              valuePropName: "checked"
-            })(
-              <Checkbox>
-                I have read the <a href="">agreement</a>
-              </Checkbox>
+              <Select placeholder="请选择用户级别">
+                <Option value="1">管理员</Option>
+                <Option value="0">普通用户</Option>
+              </Select>
             )}
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
-            <Button type="primary" htmlType="submit">
-              Register
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={this.state.loading}
+            >
+              用户新增
             </Button>
           </Form.Item>
         </Form>
@@ -208,4 +121,17 @@ class user_add extends Component {
     );
   }
 }
-export default Form.create()(user_add);
+
+// redux拿到token并挂载到App的props上面
+const mapStateToProps = state => {
+  return {};
+};
+
+// redux拿到dispatch
+let mapDispatchToProps = dispatch => ({
+  _userAdd: params => dispatch(userAdd(params))
+});
+
+export default Form.create()(
+  connect(mapStateToProps, mapDispatchToProps)(user_add)
+);

@@ -8,9 +8,9 @@ import {
 import { message } from "antd";
 import API from "@/services/index";
 
-export function checkUsername(params) {
+export function userAdd(params) {
   return async () => {
-    let res = await API.CHECK_USERNAME(params);
+    let res = await API.LOGINADD(params);
     return res;
   };
 }

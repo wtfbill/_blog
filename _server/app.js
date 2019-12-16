@@ -11,6 +11,7 @@ const router = require("./router/index");
 app.use(async (ctx, next) => {
   ctx.set("Access-Control-Allow-Origin"); // 跨域访问
   ctx.set("Access-control-Allow-Methods", "*");
+  ctx.set("Access-Control-Max-Age", 1728000);
   ctx.set(
     "Access-control-Allow-Headers",
     "X-Requested-With,content-type,Authorization"

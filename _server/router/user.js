@@ -3,7 +3,7 @@ const router = new Router();
 const userController = require("../controller/user");
 
 router.post("/register", userController.register);
-router.post("/checkUsername", userController.checkUsername);
+router.post("/add", userController.userAdd);
 router.post("/login", userController.login);
 router.get("/list", userController.list);
 router.post("/update", userController.update);
