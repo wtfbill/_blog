@@ -20,6 +20,7 @@ koa2 + koa-router + mysql + sequelize + redis(可能尝试使用)
 
 - 安装依赖
 
+
 项目根目录和根目录的app目录下分别安装
 ```
 npm install
