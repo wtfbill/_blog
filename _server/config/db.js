@@ -1,7 +1,7 @@
 
 const database = 'blog'  // 数据库名称
 const username = 'root'  // 数据库用户名
-const password = 'root'  // 数据库密码
+const password = ""  // 数据库密码
 const options = {
     host: 'localhost',   // 数据库地址
     dialect: 'mysql',    // 数据库类型

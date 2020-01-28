@@ -1,5 +1,5 @@
-import axios from "axios";
 import { BASE_URL } from "@/config/api";
+import axios from "axios";
 import { message } from "antd";
 
 axios.defaults.baseURL = BASE_URL; // 全局设置请求的前缀url

@@ -1,9 +1,14 @@
-.admin-login-container {
-  width: 300px;
-  margin: auto;
-  .title {
-    padding: 120px 0 10px;
-    text-align: center;
-    color: #555555;
+.login_bg {
+  height: 100vh;
+  background: url("../../assets/images/bg1.jpg") center center no-repeat;
+  background-size: cover;
+  .admin-login-container {
+    width: 300px;
+    margin: auto;
+    .title {
+      padding: 120px 0 10px;
+      text-align: center;
+      color: #555555;
+    }
   }
 }

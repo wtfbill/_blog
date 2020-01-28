@@ -1,0 +1,24 @@
+.mc-welcom-container {
+  .am-flexbox {
+    height: 100%;
+    background-color: #108ee9;
+    padding: 3rem 0.4rem;
+  }
+
+  .am-icon.am-icon-koubei {
+    width: 4rem;
+    height: 4rem;
+    color: deepskyblue;
+  }
+
+  .mc-flex-item {
+    text-align: center;
+  }
+
+  p {
+    font-size: 0.6rem;
+    color: aliceblue;
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+}
